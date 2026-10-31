@@ -1,0 +1,42 @@
+name: Tor version bump
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # every Monday 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: tor-version-bump
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check for a new Tor release
+        id: tor
+        run: bash .github/scripts/update-tor.sh
+
+      - name: Open pull request
+        if: steps.tor.outputs.updated == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/tor-version
+          delete-branch: true
+          commit-message: "Bump Tor from ${{ steps.tor.outputs.current }} to ${{ steps.tor.outputs.latest }}"
+          title: "Bump Tor from ${{ steps.tor.outputs.current }} to ${{ steps.tor.outputs.latest }}"
+          body: |
+            Updates `TOR_VERSION` and `TOR_SHA256` in the Dockerfile to Tor **${{ steps.tor.outputs.latest }}**.
+
+            The checksum was taken from `tor-${{ steps.tor.outputs.latest }}.tar.gz.sha256sum` on dist.torproject.org
+            after verifying its GPG signature against the pinned Tor release signing keys.
+
+            Publish a release after merging to ship the new image; the Runtipi app is updated from that release.
+
+            Release notes: https://gitlab.torproject.org/tpo/core/tor/-/raw/tor-${{ steps.tor.outputs.latest }}/ReleaseNotes

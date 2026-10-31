@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "schemaVersion": 2,
+  "services": [
+    {
+      "name": "tor-socks-proxy",
+      "image": "ghcr.io/ayushsharma82/tor-socks-proxy:tor-0.4.9.15",
+      "isMain": true,
+      "internalPort": 9150,
+      "addPorts": [
+        {
+          "containerPort": 8853,
+          "hostPort": "${TOR_DNS_PORT-8853}",
+          "udp": true
+        }
+      ],
+      "environment": [
+        { "key": "TOR_BRIDGES", "value": "${TOR_BRIDGES}" }
+      ]
+    }
+  ]
+}

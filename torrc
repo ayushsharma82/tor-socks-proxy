@@ -3,3 +3,14 @@ Log notice stdout
 DNSPort 0.0.0.0:8853
 SocksPort 0.0.0.0:9150
 DataDirectory /var/lib/tor
+
+# Client only. Relay support is also compiled out of the tor binary (see Dockerfile),
+# so ORPort/DirPort/BridgeRelay cannot be enabled at all.
+ClientOnly 1
+ExitRelay 0
+ExitPolicy reject *:*
+
+# Local control socket used only by the container healthcheck
+ControlSocket unix:/run/tor/control
+CookieAuthentication 1
+CookieAuthFile /run/tor/control.authcookie
