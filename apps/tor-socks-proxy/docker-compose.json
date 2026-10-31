@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "tor-socks-proxy",
-      "image": "ghcr.io/ayushsharma82/tor-socks-proxy:tor-0.4.9.15",
+      "image": "ghcr.io/ayushsharma82/tor-socks-proxy:1.0.2",
       "isMain": true,
       "internalPort": 9150,
       "addPorts": [
@@ -15,7 +15,10 @@
         }
       ],
       "environment": [
-        { "key": "TOR_BRIDGES", "value": "${TOR_BRIDGES}" }
+        {
+          "key": "TOR_BRIDGES",
+          "value": "${TOR_BRIDGES}"
+        }
       ]
     }
   ]
