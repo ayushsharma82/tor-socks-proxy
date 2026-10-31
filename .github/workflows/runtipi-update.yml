@@ -1,0 +1,50 @@
+name: Update Runtipi app
+
+on:
+  # Runs after the release image is published, so the new tag exists before Runtipi points at it
+  workflow_run:
+    workflows: ["Publish Docker image"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to point the Runtipi app at (e.g. v1.2.3)
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: runtipi-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'release')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Update Runtipi app version and image tag
+        id: runtipi
+        env:
+          # For release-triggered runs, head_branch is the release tag
+          RELEASE_TAG: ${{ inputs.tag || github.event.workflow_run.head_branch }}
+        run: bash .github/scripts/update-runtipi.sh "$RELEASE_TAG"
+
+      - name: Open pull request
+        if: steps.runtipi.outputs.updated == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/runtipi-version
+          delete-branch: true
+          commit-message: "Update Runtipi app to ${{ steps.runtipi.outputs.version }}"
+          title: "Update Runtipi app to ${{ steps.runtipi.outputs.version }}"
+          body: |
+            Points `apps/tor-socks-proxy` at the `${{ steps.runtipi.outputs.version }}` image published for this release,
+            sets the app `version`, and bumps `tipi_version` so Runtipi offers the update.

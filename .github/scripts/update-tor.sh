@@ -74,16 +74,5 @@ sed -i.bak \
     "$DOCKERFILE"
 rm -f "$DOCKERFILE.bak"
 
-# Keep the Runtipi app in step: image tag, displayed version, and tipi_version so Runtipi offers the update
-APP_DIR=${APP_DIR:-apps/tor-socks-proxy}
-if [ -d "$APP_DIR" ]; then
-    sed -i.bak "s|\(/tor-socks-proxy:tor-\)[0-9.]*\"|\1$latest\"|" "$APP_DIR/docker-compose.json"
-    rm -f "$APP_DIR/docker-compose.json.bak"
-    jq --indent 2 --arg version "$latest" --argjson now "$(($(date +%s) * 1000))" \
-        '.version = $version | .tipi_version += 1 | .updated_at = $now' \
-        "$APP_DIR/config.json" > "$work/config.json"
-    mv "$work/config.json" "$APP_DIR/config.json"
-fi
-
 echo "Updated Tor $current -> $latest"
 output updated true

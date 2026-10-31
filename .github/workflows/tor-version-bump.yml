@@ -37,7 +37,6 @@ jobs:
             The checksum was taken from `tor-${{ steps.tor.outputs.latest }}.tar.gz.sha256sum` on dist.torproject.org
             after verifying its GPG signature against the pinned Tor release signing keys.
 
-            The Runtipi app (`apps/tor-socks-proxy`) now points at the `tor-${{ steps.tor.outputs.latest }}` image tag,
-            which is pushed by the publish workflow — publish a release after merging so the tag exists.
+            Publish a release after merging to ship the new image; the Runtipi app is updated from that release.
 
             Release notes: https://gitlab.torproject.org/tpo/core/tor/-/raw/tor-${{ steps.tor.outputs.latest }}/ReleaseNotes
