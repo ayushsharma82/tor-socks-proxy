@@ -35,7 +35,7 @@ LABEL name="tor-socks-proxy"
 LABEL version="${TOR_VERSION}"
 
 RUN apk -U upgrade && \
-    apk -v add libevent openssl zlib xz-libs zstd-libs libcap netcat-openbsd lyrebird snowflake && \
+    apk -v add libevent libgcc openssl zlib xz-libs zstd-libs libcap netcat-openbsd lyrebird snowflake && \
     addgroup -S tor && \
     adduser -S -D -H -G tor -h /var/lib/tor -s /sbin/nologin tor && \
     mkdir -p /var/lib/tor /run/tor && \
