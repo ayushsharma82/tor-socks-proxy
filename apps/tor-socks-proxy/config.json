@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/app-info.json",
+  "name": "Tor SOCKS Proxy",
+  "id": "tor-socks-proxy",
+  "available": true,
+  "short_desc": "Client-only Tor SOCKS5 proxy with optional bridges to bypass censorship.",
+  "author": "ayushsharma82",
+  "port": 9150,
+  "categories": ["network", "security"],
+  "description": "A Tor SOCKS5 proxy (and optional DNS over Tor) built from the official Tor source with relay support compiled out. Supports obfs4, webtunnel, meek_lite and snowflake bridges to get around ISP or network restrictions. Point any SOCKS5-capable client at <host>:<port>.",
+  "tipi_version": 1,
+  "version": "0.4.9.15",
+  "source": "https://github.com/ayushsharma82/tor-socks-proxy",
+  "website": "https://www.torproject.org",
+  "exposable": false,
+  "no_gui": true,
+  "dynamic_config": true,
+  "supported_architectures": ["arm64", "amd64"],
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Tor bridges (optional). Separate multiple bridge lines with ';'. Leave empty to connect without bridges.",
+      "placeholder": "obfs4 192.0.2.10:443 FINGERPRINT cert=CERT iat-mode=0; webtunnel [2001:db8::1]:443 FINGERPRINT url=https://example.com/path ver=0.0.1",
+      "hint": "Get bridges from https://bridges.torproject.org",
+      "required": false,
+      "env_variable": "TOR_BRIDGES"
+    },
+    {
+      "type": "number",
+      "label": "Host port for DNS over Tor (UDP)",
+      "default": 8853,
+      "min": 1,
+      "max": 65535,
+      "required": false,
+      "env_variable": "TOR_DNS_PORT"
+    }
+  ],
+  "created_at": 1793473153000,
+  "updated_at": 1793473153000
+}
