@@ -1,8 +1,8 @@
 FROM alpine:3.24 AS builder
 
 # Bumped automatically by .github/workflows/tor-version-bump.yml
-ARG TOR_VERSION=0.4.9.15
-ARG TOR_SHA256=1911f5b216a6814ed143a08bbcff1c6dc96d2ca3b505df9a21876080a92963f3
+ARG TOR_VERSION=0.4.9.17
+ARG TOR_SHA256=ff372c41ee7013557fe5b7acd96c909950b27a7959c59fcb87c02591682fabe2
 
 RUN apk add --no-cache build-base curl libevent-dev openssl-dev zlib-dev xz-dev zstd-dev libcap-dev linux-headers
 
@@ -28,7 +28,7 @@ RUN ./configure \
 
 FROM alpine:3.24
 
-ARG TOR_VERSION=0.4.9.15
+ARG TOR_VERSION=0.4.9.17
 
 LABEL maintainer="Peter Dave Hello <hsu@peterdavehello.org>"
 LABEL name="tor-socks-proxy"
